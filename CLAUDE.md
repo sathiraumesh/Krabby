@@ -9,6 +9,8 @@ Krabby, a minimal x86_64 operating system kernel in Rust, built on the `bootload
 - `kernel/` — the `#![no_std]` / `#![no_main]` kernel. Compiled for `x86_64-unknown-none`. Entry is `kernel_main` via `bootloader_api::entry_point!`.
 - `runner/` — a normal host binary. Its `build.rs` wraps the compiled kernel into bootable disk images, and its `main.rs` launches QEMU on the BIOS image.
 
+Long-term direction: run Linux programs and tools on Krabby (Linux-compatible syscalls, ELF loading). Near-term work is deliberately small and incremental; do not build toward that early, but avoid designs that would block it.
+
 ## Commands
 
 Requires nightly Rust (pinned in `rust-toolchain.toml`, which also installs the `x86_64-unknown-none` target) and `qemu-system-x86_64` on PATH.
