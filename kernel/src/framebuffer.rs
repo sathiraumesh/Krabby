@@ -9,6 +9,13 @@ const LOGO_HEIGHT: usize = 128;
 
 static LOGO: &[u8] = include_bytes!("logo.rgb");
 
+static FRAMES: [&[u8]; 4] = [
+    include_bytes!("logo_0.rgb"),
+    include_bytes!("logo_1.rgb"),
+    include_bytes!("logo_2.rgb"),
+    include_bytes!("logo_3.rgb"),
+];
+
 pub struct FrameBufferWriter {
     buffer: &'static mut [u8],
     info: FrameBufferInfo,
@@ -100,21 +107,22 @@ impl FrameBufferWriter {
         }
     }
 
-    pub fn draw_image(&mut self, x0: usize, y0: usize) {
+    pub fn draw_image(&mut self, frame: &[u8], x0: usize, y0: usize) {
         for y in 0..LOGO_HEIGHT {
             for x in 0..LOGO_WIDTH {
                 let i = (y * LOGO_WIDTH + x) * 3;
-                self.put_pixel(x0 + x, y0 + y, LOGO[i], LOGO[i + 1], LOGO[i + 2]);
+                self.put_pixel(x0 + x, y0 + y, frame[i], frame[i + 1], frame[i + 2]);
             }
         }
     }
 
-    pub fn draw_image_centered(&mut self) {
+    pub fn draw_image_centered(&mut self, frame: usize) {
         let x0 = (self.info.width - LOGO_WIDTH) / 2;
         let y0 = (self.info.height - LOGO_HEIGHT) / 2;
-        self.draw_image(x0, y0);
+        self.draw_image(FRAMES[frame], x0, y0);
         self.set_cursor(BORDER, y0 + LOGO_HEIGHT);
     }
+
 }
 
 impl core::fmt::Write for FrameBufferWriter {
