@@ -4,7 +4,6 @@
 mod framebuffer;
 
 use bootloader_api::{entry_point, BootInfo};
-use core::fmt::Write;
 use core::panic::PanicInfo;
 use framebuffer::FrameBufferWriter;
 
@@ -14,7 +13,8 @@ fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
     if let Some(fb) = boot_info.framebuffer.as_mut() {
         let info = fb.info();
         let mut writer = FrameBufferWriter::new(fb.buffer_mut(), info);
-        writeln!(writer, "Hello from Krabby!").unwrap();
+        writer.draw_image_centered();
+        writer.write_centered(8, "Krabby");
     }
 
     loop {}
